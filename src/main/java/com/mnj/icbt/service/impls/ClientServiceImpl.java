@@ -4,10 +4,13 @@ import com.mnj.icbt.constant.Status;
 import com.mnj.icbt.constant.ValidationMessages;
 import com.mnj.icbt.dto.ClientDTO;
 import com.mnj.icbt.entity.Client;
+import com.mnj.icbt.entity.SchoolService;
 import com.mnj.icbt.repository.ClientRepository;
+import com.mnj.icbt.repository.SchoolServiceRepository;
 import com.mnj.icbt.service.ClientService;
 import com.mnj.icbt.utils.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,8 +24,12 @@ public class ClientServiceImpl implements ClientService {
 
     private ClientRepository clientRepository;
 
-    public ClientServiceImpl(ClientRepository clientRepository) {
+    private SchoolServiceRepository serviceRepository;
+
+    @Autowired
+    public ClientServiceImpl(ClientRepository clientRepository, SchoolServiceRepository serviceRepository) {
         this.clientRepository = clientRepository;
+        this.serviceRepository = serviceRepository;
     }
 
 
@@ -36,13 +43,18 @@ public class ClientServiceImpl implements ClientService {
             commonResponse.setStatus(-1);
             return new ResponseEntity<>(commonResponse, HttpStatus.OK);
         }
+        SchoolService service = serviceRepository.findById(dto.getServiceId()).get();
+        /*service.setDriver(null);
+        service.setClients(null);*/
         Client client = clientRepository.save(new Client(
                 dto.getClientName(),
                 dto.getLat(),
                 dto.getLon(),
                 dto.getMobileNo(),
-                dto.getStatus()
+                dto.getStatus(),
+                service
         ));
+        client.setSchoolService(null);
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(client));
         log.debug("****************** add client is finished. response: " +client);
@@ -72,13 +84,15 @@ public class ClientServiceImpl implements ClientService {
             commonResponse.setStatus(-1);
             return new ResponseEntity<>(commonResponse, HttpStatus.OK);
         }
+        SchoolService service = serviceRepository.findById(dto.getServiceId()).get();
         Client client = clientRepository.save(new Client(
                 clientId,
                 dto.getClientName(),
                 dto.getLat(),
                 dto.getLon(),
                 dto.getMobileNo(),
-                dto.getStatus()
+                dto.getStatus(),
+                service
         ));
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(client));

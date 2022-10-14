@@ -1,23 +1,19 @@
-package com.mnj.icbt.entity;
+package com.mnj.icbt.dto;
 
 import com.mnj.icbt.constant.TripType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Trip {
+public class TripDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long tripId;
 
     @Enumerated(EnumType.STRING)
@@ -34,8 +30,6 @@ public class Trip {
     private float dropLat;
     private float dropLon;
 
-    /*@ManyToOne
-    private List<Driver> drivers;
-    @ManyToMany
-    private List<Client> clients;*/
+    private Long clientId;
+    private Long driverId;
 }

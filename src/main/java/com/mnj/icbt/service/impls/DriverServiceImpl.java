@@ -4,10 +4,13 @@ import com.mnj.icbt.constant.Status;
 import com.mnj.icbt.constant.ValidationMessages;
 import com.mnj.icbt.dto.DriverDTO;
 import com.mnj.icbt.entity.Driver;
+import com.mnj.icbt.entity.SchoolService;
 import com.mnj.icbt.repository.DriverRepository;
+import com.mnj.icbt.repository.SchoolServiceRepository;
 import com.mnj.icbt.service.DriverService;
 import com.mnj.icbt.utils.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,8 +24,12 @@ public class DriverServiceImpl implements DriverService {
 
     private DriverRepository driverRepository;
 
-    public DriverServiceImpl(DriverRepository driverRepository) {
+    private SchoolServiceRepository serviceRepository;
+
+    @Autowired
+    public DriverServiceImpl(DriverRepository driverRepository, SchoolServiceRepository serviceRepository) {
         this.driverRepository = driverRepository;
+        this.serviceRepository = serviceRepository;
     }
 
     /**
@@ -39,13 +46,16 @@ public class DriverServiceImpl implements DriverService {
             commonResponse.setStatus(-1);
             return new ResponseEntity<>(commonResponse, HttpStatus.OK);
         }
+        //SchoolService service = serviceRepository.findById(dto.getServiceId()).get();
         Driver driver = driverRepository.save(new Driver(
                 dto.getName(),
                 dto.getLicenceNo(),
                 dto.getLat(),
                 dto.getLon(),
                 dto.getMobileNo(),
+                dto.getDeviceId(),
                 dto.getStatus()
+                //service
         ));
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(driver));
@@ -75,6 +85,7 @@ public class DriverServiceImpl implements DriverService {
             commonResponse.setStatus(-1);
             return new ResponseEntity<>(commonResponse, HttpStatus.OK);
         }
+        SchoolService service = serviceRepository.findById(dto.getServiceId()).get();
         Driver driver = driverRepository.save(new Driver(
                 driverId,
                 dto.getName(),
@@ -82,7 +93,9 @@ public class DriverServiceImpl implements DriverService {
                 dto.getLat(),
                 dto.getLon(),
                 dto.getMobileNo(),
+                dto.getDeviceId(),
                 dto.getStatus()
+                //service
         ));
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(driver));

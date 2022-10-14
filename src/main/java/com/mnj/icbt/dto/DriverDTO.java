@@ -13,10 +13,12 @@ public class DriverDTO {
     private String driverId;
     private String name;
     private String licenceNo;
+    private Long serviceId;
     //latitude
     private float lat;
     //longitude
     private float lon;
     private String mobileNo;
+    private String deviceId;
     private Status status;
 }
