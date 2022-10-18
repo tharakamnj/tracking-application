@@ -63,11 +63,11 @@ public class DriverTripServiceImpl implements DriverTripService {
     }
 
     @Override
-    public ResponseEntity<?> endTrip(Long driverTripId, DriverTripDTO dto) {
+    public ResponseEntity<?> endTrip(DriverTripDTO dto) {
         CommonResponse commonResponse = new CommonResponse();
         Map<String,Long> map = new HashMap<>();
         try {
-            DriverTrip trip = repository.findById(driverTripId).get();
+            DriverTrip trip = repository.findById(dto.getDriverTripId()).get();
             trip.setEndLat(dto.getEndLat());
             trip.setEndLon(dto.getEndLon());
             trip.setEndTime(DateUtil.getFormattedDateTime(DateUtil.getCurrentTime()));

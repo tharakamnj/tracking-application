@@ -166,6 +166,9 @@ public class DriverServiceImpl implements DriverService {
             Driver driver = driverRepository.findById(driverId).get();
             SchoolService service = serviceRepository.findByDriver(driver);
             List<Client> clients = service.getClients();
+            for (Client c:clients) {
+                c.setTrips(null);
+            }
             commonResponse.setPayload(Collections.singletonList(clients));
             commonResponse.setStatus(1);
         }

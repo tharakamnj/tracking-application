@@ -20,8 +20,8 @@ public class DriverTripController {
         return driverTripService.startTrip(driverId,dto);
     }
 
-    @PutMapping("/end/{driverId}")
-    public ResponseEntity<?> end(@PathVariable("driverId") Long driverId, @RequestBody DriverTripDTO dto){
-        return driverTripService.endTrip(driverId,dto);
+    @PutMapping("/end")
+    public ResponseEntity<?> end(@RequestBody DriverTripDTO dto){
+        return driverTripService.endTrip(dto);
     }
 }

@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 public interface DriverTripService {
     ResponseEntity<?> startTrip(Long driverId, DriverTripDTO dto);
 
-    ResponseEntity<?> endTrip(Long driverId, DriverTripDTO dto);
+    ResponseEntity<?> endTrip(DriverTripDTO dto);
 
 }
