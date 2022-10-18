@@ -1,5 +1,6 @@
 package com.mnj.icbt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mnj.icbt.constant.TripType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,8 +26,8 @@ public class DriverTrip {
     private LocalDateTime endTime;
 
     //for start location
-    private float startLat;
-    private float startLon;
+    private Float startLat;
+    private Float startLon;
 
     //for end location
     private float endLat;
@@ -34,8 +35,18 @@ public class DriverTrip {
 
     @ManyToOne
     @JoinColumn(name = "driverId", referencedColumnName = "driverId")
+    @JsonIgnore
     private Driver driver;
 
-
-
+    public DriverTrip(TripType tripType, LocalDateTime startTime, LocalDateTime endTime, float startLat, float startLon,
+                      float endLat, float endLon, Driver driver) {
+        this.tripType = tripType;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.startLat = startLat;
+        this.startLon = startLon;
+        this.endLat = endLat;
+        this.endLon = endLon;
+        this.driver = driver;
+    }
 }

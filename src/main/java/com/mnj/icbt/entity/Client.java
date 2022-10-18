@@ -25,6 +25,8 @@ public class Client {
     //longitude
     private float lon;
     private String mobileNo;
+
+    private String deviceId;
     private Status status;
 
 
@@ -33,24 +35,26 @@ public class Client {
     @JsonIgnore
     private SchoolService schoolService;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "client", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private List<UserTrip> trips = new ArrayList<>();
 
-    public Client(String clientName, float lat, float lon, String mobileNo, Status status, SchoolService schoolService) {
+    public Client(String clientName, float lat, float lon, String mobileNo, String deviceId, Status status, SchoolService schoolService) {
         this.clientName = clientName;
         this.lat = lat;
         this.lon = lon;
         this.mobileNo = mobileNo;
+        this.deviceId = deviceId;
         this.status = status;
         this.schoolService = schoolService;
     }
 
-    public Client(Long clientId, String clientName, float lat, float lon, String mobileNo, Status status, SchoolService schoolService) {
+    public Client(Long clientId, String clientName, float lat, float lon, String mobileNo, String deviceId, Status status, SchoolService schoolService) {
         this.clientId = clientId;
         this.clientName = clientName;
         this.lat = lat;
         this.lon = lon;
         this.mobileNo = mobileNo;
+        this.deviceId = deviceId;
         this.status = status;
         this.schoolService = schoolService;
     }

@@ -15,4 +15,12 @@ public interface DriverService {
     ResponseEntity<?> getDriverById(Long driverId);
 
     ResponseEntity<?> deleteDriver(Long driverId);
+
+    ResponseEntity<?> getTripsByDriverId(Long driverId);
+
+    ResponseEntity<?> getClientByDriverId (Long driverId);
+
+    ResponseEntity<?> updateLocation(DriverDTO dto);
+
+    ResponseEntity<?> shareLocation(Long driverId);
 }

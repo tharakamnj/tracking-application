@@ -1,14 +1,19 @@
 package com.mnj.icbt.service.impls;
 
 import com.mnj.icbt.constant.Status;
+import com.mnj.icbt.constant.TripType;
 import com.mnj.icbt.constant.ValidationMessages;
 import com.mnj.icbt.dto.ClientDTO;
+import com.mnj.icbt.dto.UserTripDTO;
 import com.mnj.icbt.entity.Client;
 import com.mnj.icbt.entity.SchoolService;
+import com.mnj.icbt.entity.UserTrip;
 import com.mnj.icbt.repository.ClientRepository;
 import com.mnj.icbt.repository.SchoolServiceRepository;
+import com.mnj.icbt.repository.UserTripRepository;
 import com.mnj.icbt.service.ClientService;
 import com.mnj.icbt.utils.CommonResponse;
+import com.mnj.icbt.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +31,13 @@ public class ClientServiceImpl implements ClientService {
 
     private SchoolServiceRepository serviceRepository;
 
+    private UserTripRepository tripRepository;
+
     @Autowired
-    public ClientServiceImpl(ClientRepository clientRepository, SchoolServiceRepository serviceRepository) {
+    public ClientServiceImpl(ClientRepository clientRepository, SchoolServiceRepository serviceRepository, UserTripRepository tripRepository) {
         this.clientRepository = clientRepository;
         this.serviceRepository = serviceRepository;
+        this.tripRepository = tripRepository;
     }
 
 
@@ -51,6 +59,7 @@ public class ClientServiceImpl implements ClientService {
                 dto.getLat(),
                 dto.getLon(),
                 dto.getMobileNo(),
+                dto.getDeviceId(),
                 dto.getStatus(),
                 service
         ));
@@ -91,6 +100,7 @@ public class ClientServiceImpl implements ClientService {
                 dto.getLat(),
                 dto.getLon(),
                 dto.getMobileNo(),
+                dto.getDeviceId(),
                 dto.getStatus(),
                 service
         ));
@@ -127,6 +137,51 @@ public class ClientServiceImpl implements ClientService {
         Client client1 = clientRepository.save(client);
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(client1));
+        return new ResponseEntity<>(commonResponse,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> pickUpClient(UserTripDTO dto) {
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            Client client = clientRepository.findById(dto.getClientId()).get();
+            UserTrip trip = tripRepository.save(new UserTrip(
+                    TripType.UP,
+                    dto.getPickUp(),
+                    null,
+                    dto.getPickLat(),
+                    dto.getPickLon(),
+                    0,
+                    0,
+                    dto.getDriverTripId(),
+                    client
+            ));
+            commonResponse.setStatus(1);
+            commonResponse.setPayload(Collections.singletonList(trip.getTripId()));
+        }catch (Exception ex){
+            commonResponse.setStatus(-1);
+            commonResponse.setErrorMessages(Collections.singletonList(ex.getMessage()));
+            return new ResponseEntity<>(commonResponse,HttpStatus.EXPECTATION_FAILED);
+        }
+        return new ResponseEntity<>(commonResponse,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> dropOutClient(UserTripDTO dto) {
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            UserTrip userTrip = tripRepository.getOne(dto.getTripId());
+            userTrip.setDropOut(DateUtil.getFormattedDateTime(DateUtil.getCurrentTime()));
+            userTrip.setDropLat(dto.getDropLat());
+            userTrip.setDropLon(dto.getDropLon());
+            UserTrip trip = tripRepository.save(userTrip);
+            commonResponse.setStatus(1);
+            commonResponse.setPayload(Collections.singletonList(trip.getTripId()));
+        }catch (Exception ex){
+            commonResponse.setStatus(-1);
+            commonResponse.setErrorMessages(Collections.singletonList(ex.getMessage()));
+            return new ResponseEntity<>(commonResponse,HttpStatus.EXPECTATION_FAILED);
+        }
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
     }
 

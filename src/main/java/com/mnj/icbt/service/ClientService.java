@@ -2,6 +2,7 @@ package com.mnj.icbt.service;
 
 import com.mnj.icbt.dto.ClientDTO;
 import com.mnj.icbt.dto.DriverDTO;
+import com.mnj.icbt.dto.UserTripDTO;
 import com.mnj.icbt.utils.CommonResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,4 +19,9 @@ public interface ClientService {
     ResponseEntity<?> getClientById(Long clientId);
 
     ResponseEntity<?> deleteClient(Long clientId);
+
+    ResponseEntity<?> pickUpClient(UserTripDTO dto);
+
+    ResponseEntity<?> dropOutClient(UserTripDTO dto);
+
 }

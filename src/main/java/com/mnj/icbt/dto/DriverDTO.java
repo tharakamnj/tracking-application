@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DriverDTO {
 
-    private String driverId;
-    private String name;
+    private Long driverId;
+    private String username;
+    private String password;
     private String licenceNo;
     private Long serviceId;
     //latitude

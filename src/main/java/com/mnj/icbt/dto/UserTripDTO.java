@@ -12,11 +12,10 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TripDTO {
+public class UserTripDTO {
 
     private Long tripId;
 
-    @Enumerated(EnumType.STRING)
     private TripType tripType;
 
     private LocalDateTime pickUp;
@@ -30,6 +29,6 @@ public class TripDTO {
     private float dropLat;
     private float dropLon;
 
+    private String driverTripId;
     private Long clientId;
-    private Long driverId;
 }

@@ -67,7 +67,7 @@ public class DriverController {
         return responseEntity;
     }
 
-    @GetMapping("/driver/{driverId}")
+    @GetMapping("/drivers/{driverId}")
     public ResponseEntity<?> getDriverById(@PathVariable("driverId") Long driverId){
         ResponseEntity responseEntity = null;
         CommonResponse commonResponse = null;
@@ -88,6 +88,65 @@ public class DriverController {
         CommonResponse commonResponse = null;
         try {
             responseEntity = driverService.deleteDriver(driverId);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            commonResponse.setStatus(-1);
+            commonResponse.setErrorMessages(Collections.singletonList(e.getMessage()));
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+    }
+    @GetMapping("/driverTrip/{driverId}")
+    public ResponseEntity<?> getTripsByDriverId(@PathVariable("driverId") Long driverId){
+        ResponseEntity responseEntity = null;
+        CommonResponse commonResponse = null;
+        try {
+            responseEntity = driverService.getTripsByDriverId(driverId);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            commonResponse.setStatus(-1);
+            commonResponse.setErrorMessages(Collections.singletonList(e.getMessage()));
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+    }
+
+    @GetMapping("/driverClient/{driverId}")
+    public ResponseEntity<?> getClientByDriverId(@PathVariable("driverId") Long driverId){
+        ResponseEntity responseEntity = null;
+        CommonResponse commonResponse = null;
+        try {
+            responseEntity = driverService.getClientByDriverId(driverId);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            commonResponse.setStatus(-1);
+            commonResponse.setErrorMessages(Collections.singletonList(e.getMessage()));
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+    }
+
+    @PutMapping("/location")
+    public ResponseEntity<?> updateLocation(@RequestBody DriverDTO dto){
+        ResponseEntity responseEntity = null;
+        CommonResponse commonResponse = null;
+        try {
+            responseEntity = driverService.updateLocation(dto);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            commonResponse.setStatus(-1);
+            commonResponse.setErrorMessages(Collections.singletonList(e.getMessage()));
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+    }
+
+    @GetMapping("/location/{driverId}")
+    public ResponseEntity<?> updateLocation(@PathVariable("driverId") Long driverId){
+        ResponseEntity responseEntity = null;
+        CommonResponse commonResponse = null;
+        try {
+            responseEntity = driverService.shareLocation(driverId);
         }catch (Exception e){
             log.error(e.getMessage());
             commonResponse.setStatus(-1);

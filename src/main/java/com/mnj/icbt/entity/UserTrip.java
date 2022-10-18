@@ -1,5 +1,6 @@
 package com.mnj.icbt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mnj.icbt.constant.TripType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +36,21 @@ public class UserTrip {
 
     private String driverTripId;
 
-    /*@ManyToMany
-    private List<Client> clients;*/
+    @ManyToOne
+    @JoinColumn(name = "clientId", referencedColumnName = "clientId")
+    @JsonIgnore
+    private Client client;
+
+    public UserTrip(TripType tripType, LocalDateTime pickUp, LocalDateTime dropOut, float pickLat, float pickLon,
+                    float dropLat, float dropLon, String driverTripId, Client client) {
+        this.tripType = tripType;
+        this.pickUp = pickUp;
+        this.dropOut = dropOut;
+        this.pickLat = pickLat;
+        this.pickLon = pickLon;
+        this.dropLat = dropLat;
+        this.dropLon = dropLon;
+        this.driverTripId = driverTripId;
+        this.client = client;
+    }
 }

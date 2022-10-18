@@ -1,6 +1,5 @@
 package com.mnj.icbt.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mnj.icbt.constant.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +18,9 @@ public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long driverId;
-    private String name;
+    private String username;
+
+    private String password;
     private String licenceNo;
     //latitude
     private float lat;
@@ -30,15 +31,16 @@ public class Driver {
     private String deviceId;
     private Status status;
 
-    @OneToOne(mappedBy = "driver")
-    private SchoolService schoolService;
+    /*@OneToOne(mappedBy = "driver")
+    private SchoolService schoolService;*/
 
     @OneToMany(mappedBy = "driver", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private List<DriverTrip> driverTrips = new ArrayList<>();
 
-    public Driver(Long driverId, String name, String licenceNo, float lat, float lon, String mobileNo, String deviceId, Status status) {
+    public Driver(Long driverId, String username,String password, String licenceNo, float lat, float lon, String mobileNo, String deviceId, Status status) {
         this.driverId = driverId;
-        this.name = name;
+        this.username = username;
+        this.password = password;
         this.licenceNo = licenceNo;
         this.lat = lat;
         this.lon = lon;
@@ -47,8 +49,9 @@ public class Driver {
         this.status = status;
     }
 
-    public Driver(String name, String licenceNo, float lat, float lon, String mobileNo, String deviceId, Status status) {
-        this.name = name;
+    public Driver(String username,String password, String licenceNo, float lat, float lon, String mobileNo, String deviceId, Status status) {
+        this.username = username;
+        this.password = password;
         this.licenceNo = licenceNo;
         this.lat = lat;
         this.lon = lon;

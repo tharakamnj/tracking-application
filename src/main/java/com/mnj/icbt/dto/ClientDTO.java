@@ -18,5 +18,6 @@ public class ClientDTO {
     //longitude
     private float lon;
     private String mobileNo;
+    private String deviceId;
     private Status status;
 }

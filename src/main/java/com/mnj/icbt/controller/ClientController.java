@@ -2,6 +2,7 @@ package com.mnj.icbt.controller;
 
 import com.mnj.icbt.dto.ClientDTO;
 import com.mnj.icbt.dto.DriverDTO;
+import com.mnj.icbt.dto.UserTripDTO;
 import com.mnj.icbt.service.ClientService;
 import com.mnj.icbt.utils.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +69,7 @@ public class ClientController {
         return responseEntity;
     }
 
-    @GetMapping("/driver/{clientId}")
+    @GetMapping("/client/{clientId}")
     public ResponseEntity<?> getClientById(@PathVariable("clientId") Long clientId){
         ResponseEntity responseEntity = null;
         CommonResponse commonResponse = null;
@@ -89,6 +90,36 @@ public class ClientController {
         CommonResponse commonResponse = null;
         try {
             responseEntity = clientService.deleteClient(clientId);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            commonResponse.setStatus(-1);
+            commonResponse.setErrorMessages(Collections.singletonList(e.getMessage()));
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+    }
+
+    @PostMapping("/pickup")
+    public ResponseEntity<?> pickupClient(@RequestBody UserTripDTO dto){
+        ResponseEntity responseEntity = null;
+        CommonResponse commonResponse = null;
+        try {
+            responseEntity = clientService.pickUpClient(dto);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            commonResponse.setStatus(-1);
+            commonResponse.setErrorMessages(Collections.singletonList(e.getMessage()));
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        return responseEntity;
+    }
+
+    @PostMapping("/dropOut")
+    public ResponseEntity<?> dropOutClient(@RequestBody UserTripDTO dto){
+        ResponseEntity responseEntity = null;
+        CommonResponse commonResponse = null;
+        try {
+            responseEntity = clientService.dropOutClient(dto);
         }catch (Exception e){
             log.error(e.getMessage());
             commonResponse.setStatus(-1);
