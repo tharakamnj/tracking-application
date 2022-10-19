@@ -56,6 +56,7 @@ public class ClientServiceImpl implements ClientService {
         service.setClients(null);*/
         Client client = clientRepository.save(new Client(
                 dto.getClientName(),
+                dto.getPassword(),
                 dto.getLat(),
                 dto.getLon(),
                 dto.getMobileNo(),
@@ -97,6 +98,7 @@ public class ClientServiceImpl implements ClientService {
         Client client = clientRepository.save(new Client(
                 clientId,
                 dto.getClientName(),
+                dto.getPassword(),
                 dto.getLat(),
                 dto.getLon(),
                 dto.getMobileNo(),

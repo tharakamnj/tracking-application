@@ -9,4 +9,6 @@ public interface DriverRepository extends JpaRepository<Driver,Long> {
     Driver findByLicenceNo(String licenceNo);
 
     Driver getByUsername(String username);
+
+    Driver findByMobileNo(String mobileNo);
 }

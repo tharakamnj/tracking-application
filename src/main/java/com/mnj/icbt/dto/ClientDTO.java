@@ -12,6 +12,7 @@ public class ClientDTO {
 
     private Long clientId;
     private String clientName;
+    private String password;
     private Long serviceId;
     //latitude
     private float lat;
