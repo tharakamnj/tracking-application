@@ -29,6 +29,6 @@ public class UserTripDTO {
     private float dropLat;
     private float dropLon;
 
-    private String driverTripId;
+    private Long driverTripId;
     private Long clientId;
 }

@@ -148,8 +148,8 @@ public class ClientServiceImpl implements ClientService {
         try {
             Client client = clientRepository.findById(dto.getClientId()).get();
             UserTrip trip = tripRepository.save(new UserTrip(
-                    TripType.UP,
-                    dto.getPickUp(),
+                    dto.getTripType(),
+                    DateUtil.getFormattedDateTime(DateUtil.getCurrentTime()),
                     null,
                     dto.getPickLat(),
                     dto.getPickLon(),
@@ -172,7 +172,19 @@ public class ClientServiceImpl implements ClientService {
     public ResponseEntity<?> dropOutClient(UserTripDTO dto) {
         CommonResponse commonResponse = new CommonResponse();
         try {
-            UserTrip userTrip = tripRepository.getOne(dto.getTripId());
+
+            List<UserTrip> userTrips = tripRepository.findAll();
+            for (UserTrip trip:userTrips) {
+                if (!trip.getClient().getClientId().equals(dto.getClientId())){
+                    userTrips.remove(trip);
+                }
+            }
+            for (UserTrip trip:userTrips) {
+                if (trip.getDropOut() != null){
+                    userTrips.remove(trip);
+                }
+            }
+            UserTrip userTrip = userTrips.get(0);
             userTrip.setDropOut(DateUtil.getFormattedDateTime(DateUtil.getCurrentTime()));
             userTrip.setDropLat(dto.getDropLat());
             userTrip.setDropLon(dto.getDropLon());

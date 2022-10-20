@@ -34,7 +34,7 @@ public class UserTrip {
     private float dropLat;
     private float dropLon;
 
-    private String driverTripId;
+    private Long driverTripId;
 
     @ManyToOne
     @JoinColumn(name = "clientId", referencedColumnName = "clientId")
@@ -42,7 +42,7 @@ public class UserTrip {
     private Client client;
 
     public UserTrip(TripType tripType, LocalDateTime pickUp, LocalDateTime dropOut, float pickLat, float pickLon,
-                    float dropLat, float dropLon, String driverTripId, Client client) {
+                    float dropLat, float dropLon, Long driverTripId, Client client) {
         this.tripType = tripType;
         this.pickUp = pickUp;
         this.dropOut = dropOut;
