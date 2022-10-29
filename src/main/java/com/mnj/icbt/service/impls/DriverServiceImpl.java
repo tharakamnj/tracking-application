@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -29,6 +30,9 @@ public class DriverServiceImpl implements DriverService {
     private DriverRepository driverRepository;
 
     private SchoolServiceRepository serviceRepository;
+
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
 
     @Autowired
     public DriverServiceImpl(DriverRepository driverRepository, SchoolServiceRepository serviceRepository) {
@@ -52,8 +56,10 @@ public class DriverServiceImpl implements DriverService {
         }
         //SchoolService service = serviceRepository.findById(dto.getServiceId()).get();
         Driver driver = driverRepository.save(new Driver(
+                dto.getFirstName(),
+                dto.getLastName(),
                 dto.getUsername(),
-                dto.getPassword(),
+                bcryptEncoder.encode(dto.getPassword()),
                 dto.getLicenceNo(),
                 dto.getLat(),
                 dto.getLon(),
@@ -62,6 +68,7 @@ public class DriverServiceImpl implements DriverService {
                 dto.getStatus()
                 //service
         ));
+        driver.setPassword(null);
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(driver));
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
@@ -71,6 +78,7 @@ public class DriverServiceImpl implements DriverService {
     public ResponseEntity<CommonResponse> getAllDrivers() {
         CommonResponse commonResponse = new CommonResponse();
             List<Driver> driverList = driverRepository.findAll();
+            driverList.stream().forEach(driver -> driver.setPassword(null));
             if (driverList.isEmpty()){
                 commonResponse.setErrorMessages(Collections.singletonList(ValidationMessages.NOT_FOUND));
                 commonResponse.setStatus(-1);
@@ -93,8 +101,10 @@ public class DriverServiceImpl implements DriverService {
         //SchoolService service = serviceRepository.findById(dto.getServiceId()).get();
         Driver driver = driverRepository.save(new Driver(
                 driverId,
+                dto.getFirstName(),
+                dto.getLastName(),
                 dto.getUsername(),
-                dto.getPassword(),
+                bcryptEncoder.encode(dto.getPassword()),
                 dto.getLicenceNo(),
                 dto.getLat(),
                 dto.getLon(),
@@ -103,6 +113,7 @@ public class DriverServiceImpl implements DriverService {
                 dto.getStatus()
                 //service
         ));
+        driver.setPassword(null);
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(driver));
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
@@ -116,6 +127,7 @@ public class DriverServiceImpl implements DriverService {
             commonResponse.setStatus(-1);
         }else {
             Optional<Driver> driver = driverRepository.findById(driverId);
+            driver.get().setPassword(null);
             commonResponse.setPayload(Collections.singletonList(driver));
             commonResponse.setStatus(1);
         }
@@ -134,6 +146,7 @@ public class DriverServiceImpl implements DriverService {
         Driver driver = driverRepository.findById(driverId).get();
         driver.setStatus(Status.DELETE);
         Driver driver1 = driverRepository.save(driver);
+        driver1.setPassword(null);
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(driver1));
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
@@ -168,6 +181,7 @@ public class DriverServiceImpl implements DriverService {
             List<Client> clients = service.getClients();
             for (Client c:clients) {
                 c.setTrips(null);
+                c.setPassword(null);
             }
             commonResponse.setPayload(Collections.singletonList(clients));
             commonResponse.setStatus(1);
@@ -188,6 +202,7 @@ public class DriverServiceImpl implements DriverService {
         driver.setLon(dto.getLon());
         driver.setLat(dto.getLat());
         Driver driver1 = driverRepository.save(driver);
+        driver1.setPassword(null);
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(driver1));
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);

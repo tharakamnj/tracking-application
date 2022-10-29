@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 public class ClientDTO {
 
     private Long clientId;
-    private String clientName;
+    private String firstName;
+    private String lastName;
+    private String username;
     private String password;
     private Long serviceId;
     //latitude

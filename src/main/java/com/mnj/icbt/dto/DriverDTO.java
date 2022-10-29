@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 public class DriverDTO {
 
     private Long driverId;
+    private String firstName;
+    private String lastName;
     private String username;
     private String password;
     private String licenceNo;

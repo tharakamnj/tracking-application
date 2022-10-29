@@ -19,7 +19,12 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long clientId;
-    private String clientName;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String username;
 
     private String password;
     //latitude
@@ -40,8 +45,10 @@ public class Client {
     @OneToMany(mappedBy = "client", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private List<UserTrip> trips = new ArrayList<>();
 
-    public Client(String clientName, String password, float lat, float lon, String mobileNo, String deviceId, Status status, SchoolService schoolService) {
-        this.clientName = clientName;
+    public Client(String firstName, String lastName, String username, String password, float lat, float lon, String mobileNo, String deviceId, Status status, SchoolService schoolService) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
         this.password = password;
         this.lat = lat;
         this.lon = lon;
@@ -51,9 +58,11 @@ public class Client {
         this.schoolService = schoolService;
     }
 
-    public Client(Long clientId, String clientName, String password, float lat, float lon, String mobileNo, String deviceId, Status status, SchoolService schoolService) {
+    public Client(Long clientId, String firstName, String lastName, String usernamee, String password, float lat, float lon, String mobileNo, String deviceId, Status status, SchoolService schoolService) {
         this.clientId = clientId;
-        this.clientName = clientName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
         this.password = password;
         this.lat = lat;
         this.lon = lon;

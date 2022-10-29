@@ -18,10 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,6 +35,9 @@ public class ClientServiceImpl implements ClientService {
     private SchoolServiceRepository serviceRepository;
 
     private UserTripRepository tripRepository;
+
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
 
     @Autowired
     public ClientServiceImpl(ClientRepository clientRepository, SchoolServiceRepository serviceRepository, UserTripRepository tripRepository) {
@@ -49,14 +55,22 @@ public class ClientServiceImpl implements ClientService {
             log.debug("This mobile number is already registered..");
             commonResponse.setErrorMessages(Collections.singletonList(ValidationMessages.ALREADY_EXIST));
             commonResponse.setStatus(-1);
-            return new ResponseEntity<>(commonResponse, HttpStatus.OK);
+            return new ResponseEntity<>(commonResponse, HttpStatus.CONFLICT);
         }
         SchoolService service = serviceRepository.findById(dto.getServiceId()).get();
+        if(service == null){
+            log.debug("Service ID: "+dto.getServiceId()+" not found.");
+            commonResponse.setErrorMessages(Collections.singletonList(ValidationMessages.NOT_FOUND));
+            commonResponse.setStatus(-1);
+            return new ResponseEntity<>(commonResponse, HttpStatus.NOT_FOUND);
+        }
         /*service.setDriver(null);
         service.setClients(null);*/
         Client client = clientRepository.save(new Client(
-                dto.getClientName(),
-                dto.getPassword(),
+                dto.getFirstName(),
+                dto.getLastName(),
+                dto.getUsername(),
+                bcryptEncoder.encode(dto.getPassword()),
                 dto.getLat(),
                 dto.getLon(),
                 dto.getMobileNo(),
@@ -65,6 +79,7 @@ public class ClientServiceImpl implements ClientService {
                 service
         ));
         client.setSchoolService(null);
+        client.setPassword(null);
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(client));
         log.debug("****************** add client is finished. response: " +client);
@@ -75,6 +90,7 @@ public class ClientServiceImpl implements ClientService {
     public ResponseEntity<?> getAllClients() {
         CommonResponse commonResponse = new CommonResponse();
         List<Client> clients = clientRepository.findAll();
+        clients.stream().forEach(client -> client.setPassword(null));
         if (clients.isEmpty()){
             commonResponse.setErrorMessages(Collections.singletonList(ValidationMessages.NOT_FOUND));
             commonResponse.setStatus(-1);
@@ -97,8 +113,10 @@ public class ClientServiceImpl implements ClientService {
         SchoolService service = serviceRepository.findById(dto.getServiceId()).get();
         Client client = clientRepository.save(new Client(
                 clientId,
-                dto.getClientName(),
-                dto.getPassword(),
+                dto.getFirstName(),
+                dto.getLastName(),
+                dto.getUsername(),
+                bcryptEncoder.encode(dto.getPassword()),
                 dto.getLat(),
                 dto.getLon(),
                 dto.getMobileNo(),
@@ -106,6 +124,7 @@ public class ClientServiceImpl implements ClientService {
                 dto.getStatus(),
                 service
         ));
+        client.setPassword(null);
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(client));
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
@@ -119,6 +138,7 @@ public class ClientServiceImpl implements ClientService {
             commonResponse.setStatus(-1);
         }else {
             Client client = clientRepository.findById(clientId).get();
+            client.setPassword(null);
             commonResponse.setPayload(Collections.singletonList(client));
             commonResponse.setStatus(1);
         }
@@ -137,6 +157,7 @@ public class ClientServiceImpl implements ClientService {
         Client client = clientRepository.findById(clientId).get();
         client.setStatus(Status.DELETE);
         Client client1 = clientRepository.save(client);
+        client1.setPassword(null);
         commonResponse.setStatus(1);
         commonResponse.setPayload(Collections.singletonList(client1));
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
@@ -174,17 +195,19 @@ public class ClientServiceImpl implements ClientService {
         try {
 
             List<UserTrip> userTrips = tripRepository.findAll();
+            List<UserTrip> userTripsNew = new ArrayList<>();
+            List<UserTrip> userTripsNew1 = new ArrayList<>();
             for (UserTrip trip:userTrips) {
-                if (!trip.getClient().getClientId().equals(dto.getClientId())){
-                    userTrips.remove(trip);
+                if (trip.getDropOut() == null){
+                    userTripsNew1.add(trip);
                 }
             }
-            for (UserTrip trip:userTrips) {
-                if (trip.getDropOut() != null){
-                    userTrips.remove(trip);
+            for (UserTrip trip:userTripsNew1) {
+                if (trip.getClient().getClientId().equals(dto.getClientId())){
+                    userTripsNew.add(trip);
                 }
             }
-            UserTrip userTrip = userTrips.get(0);
+            UserTrip userTrip = userTripsNew.get(0);
             userTrip.setDropOut(DateUtil.getFormattedDateTime(DateUtil.getCurrentTime()));
             userTrip.setDropLat(dto.getDropLat());
             userTrip.setDropLon(dto.getDropLon());

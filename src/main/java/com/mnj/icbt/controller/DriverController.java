@@ -21,7 +21,7 @@ public class DriverController {
         this.driverService = driverService;
     }
 
-    @PostMapping("/driver")
+    @PostMapping("/driverReg")
     public ResponseEntity<?> addDriver(@RequestBody DriverDTO driverDTO){
         ResponseEntity responseEntity = null;
         CommonResponse commonResponse = null;

@@ -23,7 +23,7 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @PostMapping("/client")
+    @PostMapping("/clientReg")
     public ResponseEntity<?> addClient(@RequestBody ClientDTO clientDTO){
         ResponseEntity responseEntity = null;
         CommonResponse commonResponse = null;

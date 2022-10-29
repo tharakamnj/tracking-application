@@ -27,6 +27,7 @@ public class DriverTripServiceImpl implements DriverTripService {
 
     private DriverRepository driverRepository;
 
+
     @Autowired
     public DriverTripServiceImpl(DriverTripRepository repository, DriverRepository driverRepository) {
         this.repository = repository;

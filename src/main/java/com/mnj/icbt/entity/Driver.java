@@ -18,6 +18,10 @@ public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long driverId;
+
+    private String firstName;
+
+    private String lastName;
     private String username;
 
     private String password;
@@ -37,8 +41,10 @@ public class Driver {
     @OneToMany(mappedBy = "driver", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private List<DriverTrip> driverTrips = new ArrayList<>();
 
-    public Driver(Long driverId, String username,String password, String licenceNo, float lat, float lon, String mobileNo, String deviceId, Status status) {
+    public Driver(Long driverId,String firstName, String lastName, String username,String password, String licenceNo, float lat, float lon, String mobileNo, String deviceId, Status status) {
         this.driverId = driverId;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.licenceNo = licenceNo;
@@ -49,7 +55,9 @@ public class Driver {
         this.status = status;
     }
 
-    public Driver(String username,String password, String licenceNo, float lat, float lon, String mobileNo, String deviceId, Status status) {
+    public Driver(String firstName, String lastName, String username,String password, String licenceNo, float lat, float lon, String mobileNo, String deviceId, Status status) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.licenceNo = licenceNo;
