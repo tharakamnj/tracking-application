@@ -141,12 +141,12 @@ public class DriverController {
         return responseEntity;
     }
 
-    @GetMapping("/location/{driverId}")
-    public ResponseEntity<?> updateLocation(@PathVariable("driverId") Long driverId){
+    @GetMapping("/location/{clientId}")
+    public ResponseEntity<?> shareLocation(@PathVariable("clientId") Long clientId){
         ResponseEntity responseEntity = null;
         CommonResponse commonResponse = null;
         try {
-            responseEntity = driverService.shareLocation(driverId);
+            responseEntity = driverService.shareLocation(clientId);
         }catch (Exception e){
             log.error(e.getMessage());
             commonResponse.setStatus(-1);

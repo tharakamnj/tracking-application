@@ -7,6 +7,7 @@ import com.mnj.icbt.entity.Client;
 import com.mnj.icbt.entity.Driver;
 import com.mnj.icbt.entity.DriverTrip;
 import com.mnj.icbt.entity.SchoolService;
+import com.mnj.icbt.repository.ClientRepository;
 import com.mnj.icbt.repository.DriverRepository;
 import com.mnj.icbt.repository.SchoolServiceRepository;
 import com.mnj.icbt.service.DriverService;
@@ -31,13 +32,16 @@ public class DriverServiceImpl implements DriverService {
 
     private SchoolServiceRepository serviceRepository;
 
+    private ClientRepository clientRepository;
+
     @Autowired
     private PasswordEncoder bcryptEncoder;
 
     @Autowired
-    public DriverServiceImpl(DriverRepository driverRepository, SchoolServiceRepository serviceRepository) {
+    public DriverServiceImpl(DriverRepository driverRepository, SchoolServiceRepository serviceRepository, ClientRepository clientRepository) {
         this.driverRepository = driverRepository;
         this.serviceRepository = serviceRepository;
+        this.clientRepository = clientRepository;
     }
 
     /**
@@ -209,9 +213,11 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public ResponseEntity<?> shareLocation(Long driverId) {
+    public ResponseEntity<?> shareLocation(Long clientId) {
         CommonResponse commonResponse = new CommonResponse();
         HashMap<String,Float> location = new HashMap<>();
+        Client client = clientRepository.findById(clientId).get();
+        Long driverId = client.getSchoolService().getDriver().getDriverId();
         if (!driverRepository.existsById(driverId)){
             log.debug("Not found Driver, Check your inputs.");
             commonResponse.setErrorMessages(Collections.singletonList(ValidationMessages.NOT_FOUND));

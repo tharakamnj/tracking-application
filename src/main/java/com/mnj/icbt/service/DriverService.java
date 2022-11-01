@@ -22,5 +22,5 @@ public interface DriverService {
 
     ResponseEntity<?> updateLocation(DriverDTO dto);
 
-    ResponseEntity<?> shareLocation(Long driverId);
+    ResponseEntity<?> shareLocation(Long clientId);
 }
